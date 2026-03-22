@@ -2,11 +2,15 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/lib/supabase";
+import { supabase } from "../../lib/supabase";
+import { useSearchParams } from "next/navigation";
 
 export default function AuthPage() {
   const router = useRouter();
-  const [mode, setMode] = useState<"signin" | "signup">("signin");
+  const searchParams = useSearchParams();
+  const [mode, setMode] = useState<"signin" | "signup">(
+    searchParams.get("mode") === "signup" ? "signup" : "signin"
+    );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,14 +41,21 @@ export default function AuthPage() {
       <div style={{ position: "fixed", top: "20%", left: "50%", transform: "translateX(-50%)", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(124,124,255,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
 
       <div style={{ width: "100%", maxWidth: "420px", position: "relative", zIndex: 1 }}>
-        {/* Logo */}
+       <div style={{ position: "relative" }}>
+        <button
+            onClick={() => router.push("/")}
+            style={{ position: "absolute", top: 0, right: 0, background: "rgba(255,255,255,0.05)", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--text-muted)", width: "32px", height: "32px", cursor: "pointer", fontSize: "1.2rem", display: "flex", alignItems: "center", justifyContent: "center" }}
+        >
+            ×
+        </button>
         <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
-          <span style={{ fontFamily: "'Sora', sans-serif", fontWeight: 700, fontSize: "1.5rem", color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
+            <span style={{ fontFamily: "'Sora', sans-serif", fontWeight: 700, fontSize: "1.5rem", color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
             note<span style={{ color: "var(--accent)" }}>forge</span>
-          </span>
-          <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.5rem" }}>
+            </span>
+            <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.5rem" }}>
             {mode === "signin" ? "Welcome back" : "Create your account"}
-          </p>
+            </p>
+        </div>
         </div>
 
         {/* Card */}

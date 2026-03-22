@@ -141,21 +141,26 @@ export default function Home() {
           note<span style={{ color: "var(--accent)" }}>forge</span>
         </span>
         <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-          {user && (
-            <button onClick={() => router.push("/decks")} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", fontSize: "0.85rem", padding: "0.5rem 0.75rem" }}>
-              My decks
+        {user && (
+          <button onClick={() => router.push("/decks")} style={{ background: "none", border: "none", cursor: "pointer", color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif", fontSize: "0.85rem", padding: "0.5rem 0.75rem" }}>
+            My decks
+          </button>
+        )}
+        {user ? (
+          <button onClick={async () => { await supabase.auth.signOut(); setUser(null); }} style={{ padding: "0.5rem 1rem", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", fontSize: "0.82rem", fontWeight: 500, cursor: "pointer" }}>
+            Sign out
+          </button>
+        ) : (
+          <>
+            <button onClick={() => router.push("/auth?mode=signup")} style={{ padding: "0.5rem 1rem", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "transparent", color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", fontSize: "0.82rem", fontWeight: 500, cursor: "pointer" }}>
+              Sign up
             </button>
-          )}
-          {user ? (
-            <button onClick={async () => { await supabase.auth.signOut(); setUser(null); }} style={{ padding: "0.5rem 1rem", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)", background: "rgba(255,255,255,0.04)", color: "var(--text-secondary)", fontFamily: "'DM Sans', sans-serif", fontSize: "0.82rem", fontWeight: 500, cursor: "pointer" }}>
-              Sign out
-            </button>
-          ) : (
-            <button onClick={() => router.push("/auth")} style={{ padding: "0.5rem 1rem", borderRadius: "8px", border: "1px solid rgba(124,124,255,0.3)", background: "rgba(124,124,255,0.08)", color: "var(--accent)", fontFamily: "'DM Sans', sans-serif", fontSize: "0.82rem", fontWeight: 500, cursor: "pointer" }}>
+            <button onClick={() => router.push("/auth?mode=signin")} style={{ padding: "0.5rem 1rem", borderRadius: "8px", border: "1px solid rgba(124,124,255,0.3)", background: "rgba(124,124,255,0.08)", color: "var(--accent)", fontFamily: "'DM Sans', sans-serif", fontSize: "0.82rem", fontWeight: 500, cursor: "pointer" }}>
               Sign in
             </button>
-          )}
-        </div>
+          </>
+        )}
+      </div>
       </nav>
 
       {/* Hero */}
