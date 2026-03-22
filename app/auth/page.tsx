@@ -1,16 +1,15 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { supabase } from "../../lib/supabase";
-import { useSearchParams } from "next/navigation";
 
-export default function AuthPage() {
+function AuthForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [mode, setMode] = useState<"signin" | "signup">(
     searchParams.get("mode") === "signup" ? "signup" : "signin"
-    );
+  );
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -37,30 +36,27 @@ export default function AuthPage() {
 
   return (
     <main suppressHydrationWarning style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: "1.5rem", position: "relative" }}>
-      {/* Background orb */}
       <div style={{ position: "fixed", top: "20%", left: "50%", transform: "translateX(-50%)", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(124,124,255,0.08) 0%, transparent 70%)", pointerEvents: "none" }} />
 
       <div style={{ width: "100%", maxWidth: "420px", position: "relative", zIndex: 1 }}>
-       <div style={{ position: "relative" }}>
-        <button
+        <div style={{ position: "relative" }}>
+          <button
             onClick={() => router.push("/")}
             style={{ position: "absolute", top: 0, right: 0, background: "rgba(255,255,255,0.05)", border: "1px solid var(--border)", borderRadius: "8px", color: "var(--text-muted)", width: "32px", height: "32px", cursor: "pointer", fontSize: "1.2rem", display: "flex", alignItems: "center", justifyContent: "center" }}
-        >
+          >
             ×
-        </button>
-        <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
+          </button>
+          <div style={{ textAlign: "center", marginBottom: "2.5rem" }}>
             <span style={{ fontFamily: "'Sora', sans-serif", fontWeight: 700, fontSize: "1.5rem", color: "var(--text-primary)", letterSpacing: "-0.02em" }}>
-            note<span style={{ color: "var(--accent)" }}>forge</span>
+              note<span style={{ color: "var(--accent)" }}>forge</span>
             </span>
             <p style={{ fontSize: "0.85rem", color: "var(--text-muted)", marginTop: "0.5rem" }}>
-            {mode === "signin" ? "Welcome back" : "Create your account"}
+              {mode === "signin" ? "Welcome back" : "Create your account"}
             </p>
-        </div>
+          </div>
         </div>
 
-        {/* Card */}
         <div className="glass" style={{ borderRadius: "20px", padding: "2rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-          {/* Email */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
             <label style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>Email</label>
             <input
@@ -74,7 +70,6 @@ export default function AuthPage() {
             />
           </div>
 
-          {/* Password */}
           <div style={{ display: "flex", flexDirection: "column", gap: "0.4rem" }}>
             <label style={{ fontSize: "0.78rem", color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>Password</label>
             <input
@@ -113,5 +108,13 @@ export default function AuthPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+export default function AuthPage() {
+  return (
+    <Suspense fallback={<div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}><p style={{ color: "var(--text-muted)", fontFamily: "'DM Sans', sans-serif" }}>Loading...</p></div>}>
+      <AuthForm />
+    </Suspense>
   );
 }
